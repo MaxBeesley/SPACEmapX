@@ -13,7 +13,7 @@
 [![](https://img.shields.io/badge/SPACEmapX-version0.99-blue.svg)](https://github.com/yintz/SPACEmapX/releases)[![](https://img.shields.io/github/last-commit/yintz/SPACEmapX.svg)](https://github.com/yintz/SPACEmapX/commits/main)
 
 
-# SPACEMapX - Spatial Phylogenetic Analysis and Clonal Evolution: MAPping the lethal clone (X) 
+# SPACEMapX - Spatial Phylogenetic Analysis and Clonal Evolution: MAPping the lethal X clone
 
 This package provides guidance for analysis of spatially resolved tissue (Visium ST), focusing on clonal dynamics derived from inferred copy number status.
 
@@ -23,7 +23,7 @@ If you need any assistance with running this package, please feel free to contac
 
 ## Functions
 
-This packages contains 4 major functions.  
+This packages assists with 4 major elements. 
 1 Infer Copy Number Variation based on transcriptomics data.  
 2 Spatial data wrapper.  
 3 Heatmap Plots.  
@@ -41,7 +41,7 @@ graphics, grDevices, RColorBrewer, gplots, futile.logger, stats, utils, methods,
 
 
 # tutorial 
-https://github.com/yintz/SPACEmapX/wiki/SPACEmapX-tutorial
+https://github.com/MaxBeesley/SPACEmapX/wiki/SPACEmapX-tutorial
 
 
 ## Installation
@@ -62,12 +62,12 @@ ShowTwigSectionName(TwigID)
 
 
 
-`SpaceMapX` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
+`SpaceMapX` is an R package for Spatially Resolved Transcriptomics data analysis and visualization. It builds on the framework of the inferCNV package, with the additional functions of SpatialInferCNV, alongside some novel functions to assist in multi-section analysis from an individual patient. 
 
 
-# 10x ST Data
+# Data
 
-This package is designed to work with Visium Fresh Frozen, FFPE V1,V2 data only.
+This package is designed to work with Visium Fresh Frozen, FFPE V1,V2 data.
 
 If you would like a representative ST test dataset, please try these data [from Erickson et al, Nature 2022; https://www.nature.com/articles/s41586-022-05023-2]. 
 [MendeleyRepository](https://data.mendeley.com/v1/datasets/svw96g68dv/draft?a=3f263217-2bd3-4a3c-8125-8c517c3a9e29).
