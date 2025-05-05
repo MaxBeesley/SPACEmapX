@@ -37,6 +37,13 @@ inferCNV: https://github.com/broadinstitute/infercnv
 
 
 
+
+
+#### Software Requirements
+JAGS
+R (tutorial completed on R4.4.1)
+R libraries: inferCNV, Seurat, SPACEmapX
+
 ## JAGS Pre-requirement
 JAGS
 In order to run infercnv, JAGS (Just Another Gibbs Sampler) must be installed.
@@ -44,24 +51,18 @@ In order to run infercnv, JAGS (Just Another Gibbs Sampler) must be installed.
 Install JAGS
 Install the JAGS package. This can be installed for Mac, Windows, or Linux. Be sure to download and install the corresponding package matching your OS.
 
-#### Software Requirements
-JAGS
-R (tutorial completed on R4.4.1)
-R libraries: inferCNV, Seurat, SPACEmapX
-
-
-## tutorial 
+#### tutorial 
 https://github.com/MaxBeesley/SPACEmapX/wiki/SPACEmapX-tutorial
 
 
-## Installation
+#### Installation
 The package can be installed through GitHub using;
 ``` r
 install.packages("remotes")
 remotes::install_github("yintz/SPACEmapX")
 ```
 
-## Novel functions introduced
+#### Novel functions introduced in addition to SpatialInferCNV
 ``` r
 LoadSTinfo(summary_csv_file)
 LoadSTdata(loadedSTinfoData)
