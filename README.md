@@ -65,6 +65,8 @@ https://github.com/MaxBeesley/SPACEmapX/wiki/SPACEmapX-tutorial
 
 
 
+
+
 ## Novel functions introduced in addition to SpatialInferCNV
 ``` r
 LoadSTinfo(summary_csv_file)
