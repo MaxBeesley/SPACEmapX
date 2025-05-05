@@ -23,21 +23,27 @@ If you need any assistance with running this package, please feel free to contac
 
 ## Functions
 
-This packages assists with 4 major elements. 
-1 Infer Copy Number Variation based on transcriptomics data.  
-2 Spatial data wrapper.  
-3 Heatmap Plots.  
-4 Dendrogram selector.  
+This packages is a wrapper to provide support for importing and processing spatial transriptomics data (1), with improved Heatmap Plots (2) and a tool to select dendrogram barcodes (3). These are additions to the core inferCNV package, which is used to infer Copy Number Variation (CNV) from transcriptomic data and for design of the objects used throughout. 
+inferCNV: https://github.com/broadinstitute/infercnv
 
 
-## Pre-requirement
-This package is based on InferCNV & SpatialInferCNV. SPACEmapX is designed as a helper package for these.
 
+## Purpose
+SPACEmapX is based on inferCNV and done in collaboration with the authors of SpatialInferCNV. This package is designed to simplify complex workflows when using inferCNV on multiple sections of Spatial Transcriptomic (ST) data from an individual patient.
+
+
+
+## JAGS Pre-requirement
+JAGS
+In order to run infercnv, JAGS (Just Another Gibbs Sampler) must be installed.
+
+Install JAGS
+Install the JAGS package. This can be installed for Mac, Windows, or Linux. Be sure to download and install the corresponding package matching your OS.
 
 #### Software Requirements
 JAGS
-R libraries: 
-graphics, grDevices, RColorBrewer, gplots, futile.logger, stats, utils, methods, ape, Matrix, fastcluster, dplyr, HiddenMarkov, ggplot2, edgeR, coin, caTools, digest, reshape, rjags, fitdistrplus, future, foreach, doParallel, BiocGenerics, SummarizedExperiment, SingleCellExperiment, tidyr, parallel, coda, gridExtra, argparse
+R (tutorial completed on R4.4.1)
+R libraries: inferCNV, Seurat, SPACEmapX
 
 
 # tutorial 
@@ -51,9 +57,9 @@ install.packages("remotes")
 remotes::install_github("yintz/SPACEmapX")
 ```
 
-## Functions introduction 
+## Novel functions introduced
 ``` r
-LoadSTinfo(summary csv file)
+LoadSTinfo(summary_csv_file)
 LoadSTdata(loadedSTinfoData)
 ShowTwigSpotsList(TwigID1,TwigID2,TwigID3,...)
 ShowTwig(TwigID)
@@ -62,12 +68,11 @@ ShowTwigSectionName(TwigID)
 
 
 
-`SpaceMapX` is an R package for Spatially Resolved Transcriptomics data analysis and visualization. It builds on the framework of the inferCNV package, with the additional functions of SpatialInferCNV, alongside some novel functions to assist in multi-section analysis from an individual patient. 
 
 
 # Data
 
-This package is designed to work with Visium Fresh Frozen, FFPE V1,V2 data.
+This package has been designed to work with Visium Fresh Frozen, FFPE V1,V2 data.
 
 If you would like a representative ST test dataset, please try these data [from Erickson et al, Nature 2022; https://www.nature.com/articles/s41586-022-05023-2]. 
 [MendeleyRepository](https://data.mendeley.com/v1/datasets/svw96g68dv/draft?a=3f263217-2bd3-4a3c-8125-8c517c3a9e29).
