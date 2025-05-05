@@ -31,7 +31,7 @@ SPACEmapX is based on inferCNV and done in collaboration with the authors of Spa
 
 ## Overview
 
-This packages is a wrapper to provide support for importing and processing spatial transriptomics data (1), with improved Heatmap Plots (2) and a tool to select dendrogram barcodes (3). These are additions to the core inferCNV package, which is used to infer Copy Number Variation (CNV) from transcriptomic data and for design of the objects used throughout. 
+This packages is a wrapper to provide I) support for importing and processing spatial transriptomics data, II)  improved Heatmap Plots and III) a tool to select dendrogram barcodes. These are additions to the core inferCNV package, which is used to infer Copy Number Variation (CNV) from transcriptomic data and provides the design of the objects used throughout. 
 inferCNV: https://github.com/broadinstitute/infercnv
 
 
