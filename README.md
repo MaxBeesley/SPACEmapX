@@ -21,15 +21,19 @@ Our particular goal has been identification of the "lethal clone", defined as th
 
 If you need any assistance with running this package, please feel free to contact us via GitHub "issue" messaging
 
-## Functions
-
-This packages is a wrapper to provide support for importing and processing spatial transriptomics data (1), with improved Heatmap Plots (2) and a tool to select dendrogram barcodes (3). These are additions to the core inferCNV package, which is used to infer Copy Number Variation (CNV) from transcriptomic data and for design of the objects used throughout. 
-inferCNV: https://github.com/broadinstitute/infercnv
-
 
 
 ## Purpose
 SPACEmapX is based on inferCNV and done in collaboration with the authors of SpatialInferCNV. This package is designed to simplify complex workflows when using inferCNV on multiple sections of Spatial Transcriptomic (ST) data from an individual patient.
+
+
+
+
+## Overview
+
+This packages is a wrapper to provide support for importing and processing spatial transriptomics data (1), with improved Heatmap Plots (2) and a tool to select dendrogram barcodes (3). These are additions to the core inferCNV package, which is used to infer Copy Number Variation (CNV) from transcriptomic data and for design of the objects used throughout. 
+inferCNV: https://github.com/broadinstitute/infercnv
+
 
 
 
