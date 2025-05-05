@@ -51,6 +51,7 @@ In order to run infercnv, JAGS (Just Another Gibbs Sampler) must be installed.
 Install JAGS
 Install the JAGS package. This can be installed for Mac, Windows, or Linux. Be sure to download and install the corresponding package matching your OS.
 
+
 # Installation
 The package can be installed through GitHub using;
 ``` r
@@ -58,8 +59,11 @@ install.packages("remotes")
 remotes::install_github("yintz/SPACEmapX")
 ```
 
+
 # Tutorial 
 https://github.com/MaxBeesley/SPACEmapX/wiki/SPACEmapX-tutorial
+
+
 
 ## Novel functions introduced in addition to SpatialInferCNV
 ``` r
