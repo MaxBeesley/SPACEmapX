@@ -50,7 +50,7 @@ R (tutorial completed on R4.4.1)
 R libraries: inferCNV, Seurat, SPACEmapX
 
 
-# tutorial 
+## tutorial 
 https://github.com/MaxBeesley/SPACEmapX/wiki/SPACEmapX-tutorial
 
 
