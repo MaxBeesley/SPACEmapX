@@ -84,27 +84,7 @@ Import inferCNV .csv file to Loupe Browser and visualise on spatial map.
 Conducted using the Loupe browser by importing the inferCNV .csv file with two columns (Barcode and Clonal_annotation) and visualising this onto the spatial map. This overlay can also be achieved using Seurat or ggplot2 (using the annotation_raster function).
 
 
-
-
-
-### Clusters spots based method
-For 10x FFPE V2 slides, 11mm has around 14k spots,(It is a time-consuming job for pathologies to annotate all spots for benign, cancer stages, stroma, etc).and in this test, normally, it requires many sections, like several from prostate local cancer. several lymph nodes sections.
-it is even harder for most of lab. if you don't have such requirement, you can run analysis based on cluster and gene expression. !!!!!! NEEDS WORK !!!!!
-
-
-
-
-### Pathology annotation spots based method
-if you have pathlogist to annotate all spots for each section. we recommended to have multiple pathologists to annotate and compare the different spots for double verification.
-
-based on this pathologist annotation, it has more accurate spots and less number of spots to reduce the computation power.
-
-
-# 10X Visium HD ST analysis
-
-The improved 10x FFPE V2 HD contains more than 42 million barcodes in 2um squares. The barcode naming system has changed and also the size of the expression matrix, which often reaches a file size of 92GB - therefore a platform with around 200GB RAM is required. 
-
-# Script
+# Example script for analysis 
 
 ``` r
 # load the required packages
@@ -190,9 +170,9 @@ inferCNV_object = infercnv::run(inferCNV_object,
 
 
 # Assessing phylogenetic dendogram and selecting barcodes from twigs of interest to select section-specific reference
-clustering <- read.dendrogram(file="infercnv.preliminary.observations_dendrogram.txt")
-clustering_phylo <- as.phylo(clustering)
-my.subtrees = subtrees(clustering_phylo)  # subtrees() to subset
+clustering <- SPACEmapX::read.dendrogram(file="infercnv.preliminary.observations_dendrogram.txt")
+clustering_phylo <- SPACEmapX::as.phylo(clustering)
+my.subtrees = SPACEmapX::subtrees(clustering_phylo)  # subtrees() to subset
 
 png("clustering_phylo.png",width=10000,height=10500, res = 300)
 plot(clustering_phylo,show.tip.label = FALSE)
@@ -200,7 +180,7 @@ nodelabels(text=1:clustering_phylo$Nnode,node=1:clustering_phylo$Nnode+Ntip(clus
 dev.off()
 
 # Select quiet twig, e.g. 321 and generate a .csv file of the barcodes present in that twig
-ShowTwigSpotsList(321)
+SPACEmapX::ShowTwigSpotsList(321)
 
 ```
 Repeat step 2 for each of the sections which results in list of barcodes representing the quiet barcodes across the patient
@@ -222,9 +202,9 @@ P4_Ref <- read.csv(P4_Ref.csv)
 LII1_Ref <- read.csv(lII1_Ref.csv)
 
 # Filter count matrices for selected barcodes
-A2_ref_filtered <- MergingCountAndAnnotationData("A2", A2_Ref, count_matrix_A2)
-P4_ref_filtered <- MergingCountAndAnnotationData("P4", P4_Ref, count_matrix_P4)
-LII1_ref_filtered <- MergingCountAndAnnotationData("LII1", LII1_Ref, count_matrix_LII1)
+A2_ref_filtered <- SpatialInferCNV::MergingCountAndAnnotationData("A2", A2_Ref, count_matrix_A2)
+P4_ref_filtered <- SpatialInferCNV::MergingCountAndAnnotationData("P4", P4_Ref, count_matrix_P4)
+LII1_ref_filtered <- SpatialInferCNV::MergingCountAndAnnotationData("LII1", LII1_Ref, count_matrix_LII1)
 
 # Merge histology and count data and save for use in inferCNV
 ref_counts_joined <- merge(A2_ref_filtered, P4_ref_filtered, by="Genes") !!!!! check
@@ -232,7 +212,7 @@ ref_counts_joined <- merge(ref_counts_joined, LII1_ref_filtered, by="Genes") !!!
 ref_counts_joined <- ref_counts_joined %>% column_to_rownames(., var = "Genes")
 write.table(ref_counts_joined, "ref_counts_joined.tsv", sep = "\t")
 ref_histology_joined <- rbind(A2_Ref, P4_Ref, LII1_Ref)
-ref_histology_joined <- FinalAnnotations(ref_histology_joined, ref_counts_joined)
+ref_histology_joined <- SpatialInferCNV::FinalAnnotations(ref_histology_joined, ref_counts_joined)
 write.table(ref_histology_joined, "ref_histology_joined.tsv", 
             sep = "\t", quote = FALSE, 
             col.names = FALSE, row.names = FALSE)
@@ -408,6 +388,28 @@ Step 6 (to overlay with spatial visualisations) can now be conducted using the L
 
 # Example of a final heatmap with different clones annotated
 ![image](https://github.com/yintz/SPACEmapX/blob/main/Figures/P15.preliminary.png)
+
+
+
+
+
+## Clusters spots based method
+For 10x FFPE V2 slides, 11mm has around 14k spots,(It is a time-consuming job for pathologies to annotate all spots for benign, cancer stages, stroma, etc).and in this test, normally, it requires many sections, like several from prostate local cancer. several lymph nodes sections.
+it is even harder for most of lab. if you don't have such requirement, you can run analysis based on cluster and gene expression. !!!!!! NEEDS WORK !!!!!
+
+
+### Pathology annotation spots based method
+if you have pathlogist to annotate all spots for each section. we recommended to have multiple pathologists to annotate and compare the different spots for double verification.
+
+based on this pathologist annotation, it has more accurate spots and less number of spots to reduce the computation power.
+
+
+## 10X Visium HD ST analysis
+
+The improved 10x FFPE V2 HD contains more than 42 million barcodes in 2um squares. The barcode naming system has changed and also the size of the expression matrix, which often reaches a file size of 92GB - therefore a platform with around 200GB RAM is required. 
+
+
+
 
 # Citation
 
