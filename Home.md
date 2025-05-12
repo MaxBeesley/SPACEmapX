@@ -2,104 +2,95 @@
 
 This page is currently under development and will soon be published as a standard version.
 
+# SPACE Lab
+??????
 
 # Introduction
-Spatial transcriptomics technology provides in situ whole-transcriptome data localised to high resolution tissue regions. It is beginning to transform our understanding of somatic events underlying the development of cancer, compared with previous bulk RNA or even single cell technology. 
+Spatial transcriptomics technology provides in situ whole-transcriptome data localised to high resolution tissue regions. It is beginning to transform our understanding of somatic events underlying the development of cancer, compared with previous bulk or even single cell sequencing technology.
 
-Copy number alterations (CNA) are a common feature of cancer development, and can be used to interrogate clonal phylogenetics in pre-cancer and cancerous cells. inferCNV is a computational method to infer the copy number variations from transcriptomical data. It was initially developed for use in single cell RNAseq data (Patel et al, Science 2014; https://github.com/broadinstitute/infercnv) and we have repurposed it for use with visium spatial transcriptomics, developing a package called spatialinferCNV (https://github.com/aerickso/SpatialInferCNV).
+Copy number alterations (CNA) are a common mutational feature of cancer development, and can be used to interrogate clonal phylogenetics in pre-cancer and cancerous cells. inferCNV is a computational method to infer the copy number variations from transcriptomic data. It was initially developed for use in single cell RNAseq data (Patel et al., Science 2014 10.1126/science.1254257; github.com/broadinstitute/infercnv) and we have repurposed it for use with the 10x Genomics Visium spatial transcriptomics platform, developing a package called SpatialInferCNV (github.com/aerickso/SpatialInferCNV).
+Here we further extend the SpatialInferCNV package to incorporate the latest Visium spatial transcriptomic chemistries (Visium v2 and Visium HD), providing a guide to undertake the following analyses:
+    1.	Selection of appropriate patient-specific reference sets.
+    2.	Enabling a "global" inferCNV analysis combining multiple sections from a single patient.
+    3.	Construction of a unifying heatmap to identify distinct cancer clones, with improved legends corresponding to section of origin, tissue type and clone membership.
+    4.	Creation of a phylogenetic tree representative of the clones identified.
+    5.	Visualisation of these clones onto the spatial image.
 
-Here we extend this package to incorporate the latest visium spatial transcriptomic chemistries (Visium v2 and Visium HD), providing a guide to undertake the following analyses
-1. Selection of appropriate patient-specific reference set
-2. Generation of a "global" inferCNV heatmap for multiple sections from a single patient
-3. Construction of a unifying heatmap including suitable legends corresponding to section of origin, tissue type and clone membership
-4. Deduction of a phylogenetic tree reprentative of the clones demonstrated in step 2 and 3
-5. Visualisation of clones in a spatial summary of data
+For this demonstration, we have applied SPACEmapX to 10 patients including both prostate (P) and lymph node (LN) tissue. Each patient has approximately 10 sections (11mm2 or 6.5mm2), totalling 2 million transcriptomic data points (spots). Of note, inferCNV analyses are limited to approximately 40,000 data points for plotting, so we also demonstrate how to process the 100,000+ spots from a single patient to representatively sample each clone and enable accurate portrayal as a "global heatmap", prior to generation of phylogenetic trees and spatial data visualisation.
 
-For illustration, we have applied SPACEmapX to 10 patients including both prostate and lymph node tissue. Each patients had approximately 10 sections (11mm or 6.5mmsq), totallying 2million transcriptomical data points (spots). Of note, inferCNV is limited to approximately 40,000 data points for plotting, so we demonstrate how to combine 100,000+ spots from a single patient by random selection of spots from each "clone" to facitate inclusion into a "global heatmap" prior to generation of phylogenetic trees and spatial data visulatisation.
 
 # Quick Start
-spatial transcriptomics copy number variation needs gene expression matrix and annotation file for each spots. 
-they name as filtered_feature_bc_matrix.h5 and csv files(exported from loupe browser(all data points annotated by pathologist or other methods to tell the difference of the different dataset.)
+To analyse copy number variation (CNV) in spatial transcriptomics data, the two necessary inputs are gene expression matrix (filtered_feature_bc_matrix.h5) and an annotation file stating the cell type present at each spot as determined from histology (.csv file exported from the 10x Genomics Loupe browser as discussed below) or from scRNAseq-style transcriptomic analysis. 
 
 # Software Requirements 
-R,  
-Loupe browser,  
-workstation(either Windows/linux based)  
+R environment (tutorial carried out on 4.4.3)
+R package SpaceMapX (tutorial carried out on 1.1.0)
+R package InferCNV (tutorial carried out on 1.22.0)
+Loupe browser (tutorial carried out on 8.1.2).
+!!!!! What RAM / nodes are needed for this analysis?? !!!!!
+
 
 
 # Work-Flow
-![workflow1](https://github.com/yintz/SPACEmapX/blob/d934cbc53e177f392432acbbc54da0ea0bd2abea/Figures/graph.png)
+![workflow1](https://github.com/MaxBeesley/SPACEmapX/blob/main/Figures/SPACEmapX_github_workflow_MB.png)
 
 
 
+## Step 1 - Preparation of input data
+For analysis of multiple samples, a .csv file is required providing sample name (SampleID), location of gene expression data (SampleGeneExpression), location of Loupe browser annotation file (AnnotationFile) and tissue type (Type). Name this .csv file as "SpatialDataTable.csv"
+
+![image](https://github.com/MaxBeesley/SPACEmapX/blob/main/Figures/dataset.png)
 
 
-Preparation of data
-* Construct matrix of all tissue sections to be analysed
-* Include: filename; filesource; section name (e.g. A1, A2, A3, P1, etc); tissue type (e.g. prostate or lymph node)
 
-# Data requirement
-for multiple samples analysis, it needs a csv file build by users to have these information as input.
-![](man/DataDemo.png)
-![](https://github.com/yintz/SPACEmapX/tree/3aa863eb1cc5eb2c51a320bec94889f7e506eca9/man)
-![](R/dataset.png)
-![Alt text of the image](https://github.com/yintz/SPACEmapX/blob/aade49968c3acd8105eb3e1ad01468de1d30101b/Figures/dataset.png)
-
-[
-](https://github.com/yintz/SPACEmapX/blob/aade49968c3acd8105eb3e1ad01468de1d30101b/Figures/dataset.png)
-Save this File as "SpatialDataTable.csv"
+## Step 2 - Reference set selection
+!!!!!!! needs work. & explan 'twig' terminology
+a)	Analyse each individual section with SpatialInferCNV? without using a Reference.
+b)	Use the "twig ID"? function to generate a section-specific heatmap
+c)	Select the quietest? twig for each section.
+d)	Merge all of these ‘quietest twigs’ together and re-analyse with SpatialInferCNV? it without reference.
+e)	Now assess this new heatmap and select the quietest twig overall which will now be used as the reference for all sections from this patient.
 
 
-in Rstudio load SPACEmapX package
-use LoadSTinfo('named.csv') to load all collective expression matrixes and related info.
-
-
-1. Reference set selection
-in order to run copy number variation, we need select a pure clean reference on diploid status. we use Run() to 
-run all sections in original tissue.
-
-* using dendrogram to select the quietest twigs(the twig contains the least red/blue pattern across all chromosome on figure.
-save all the barcode list info. (this is the first round of quiet reference spots barcode lists)
-* recreate a csv files to contain all matrix expression with the barcode selected.
-use LoadSTinfo('named.csv') to load all data and merge all quite reference spots barcode together then use run() to generate a new heat map.
-* on this heat map, to select the quietest twig and save the new selected barcode list as final reference for this whole dataset.
-
-
-2. Section-specific clone selection
-* run each section using reference set from 1) [check below:pathological interested spots/cluster based spots]
-* identify each region with common iCNV features and annotate to candidate clone.
-* run "twig ID" function for global clone heatmap
-* select different clone using twig number.
-
+## Step 3 - Section-specific clone selection
+a)	Analyse each section using the reference identified during Step 2) [check below:pathological interested spots/cluster based spots]
+b)	Identify clusters with common CNV features and annotate as a candidate clone.
+c)	Run "twig ID"? function to generate global clone heatmap
+d)	Select different clone using twig number?.
 N.B. Key requirements to consider a region a 'clone'
-> * Same copy number features (part manual visualisation; part dendogram)
-> * Located in the same place on Loupe Browser
-> * Ten or more spots in that location
-
-3. Global clone selection
-* SpaceMapX is used to analyze multiple sections of 10x ST slides. The overall number of spots can be very large clones, making it challenging in terms of memory limitation and computation time. Some organisation-controlled workstations do not allow researchers to install DisplayX to remotely display images, and due to Linux package limitations (such as with the Cairo package(only work with less than 40K spots on PNG output). It's important to find ways to reduce the time and spots size needed to combine all clones and generate a global clone heat map. For large clones with more than 100 spots, we randomly select (**R** function **CloneList <- sample_n(CloneList, 100 + ceiling(total_rows * 0.1))** ) 100 spots and 10% of the total clone spots to represent the clone size differences in default setting.
-
-* combine all clone to plot a global clone heat map.
-* identify each region of common iCNV features and assign to candidate clone 
-(naming convention: primary clone name = a-z; metastatic clone name = X1, X2, X3 etc)
-* re-run iCNV heatmap with clone order forced according to assigned clone names
-
-4. Generate phylogenetic tree
-
-The SPACEmapX generates a phylogenetic file SPACEmapX.preliminary.observations_dendrogram.txt
- to further clone selection and refine.
-
-5. Create spatial visualisations
-* Use iCNV .csv file to import to Loupe Browser
-* Create spatial visualisation of global clone map for figure generation. 
+Same copy number features (part manual visualisation; part dendogram)
+Located in the same spatial location (can check with Loupe Browser)
+Ten or more adjacent spots in one location
 
 
-## Patient samples
-![image](https://github.com/yintz/SPACEmapX/blob/main/Figures/results.png)
+## Step 4 - Global clone selection
+a)	SpaceMapX is used to analyze multiple sections of 10x ST slides. The overall number of spots can therefore be very large, making it challenging in terms of memory limitation and computation time. Some organisation-controlled workstations do not allow researchers to install DisplayX to remotely display images, and due to Linux package limitations (such as with the Cairo package which will only work with less than 40K spots on PNG output). It's important to find ways to reduce the time and spots size needed to combine all clones and generate a global clone heat map. 
+b)	For large clones with more than 100 spots, we randomly select 100 spots + 10%. For clones of less than 100 spots, we take all the spots. This enables a reprresentaive sampling of the data. 
+This is carried out in the R function: sample_n(CloneList, 100 + ceiling(total_rows * 0.1))
+c)	Then combine all clones to plot a global clone heat map across each spatial slice from this patient.
+d)	Identify each region of common inferCNV features and assign to a candidate clone 
+> Naming convention: primary clone name = a-z; metastatic clone name = X1, X2, X3 etc.
+e)	Re-generate inferCNV heatmap with clone order forced according to assigned clone names
+
+
+## Step 5 - Generate phylogenetic tree
+This analysis enables a phylogenetic tree to be generated by manual assessment of how each of the clones is related to one another by interpreting the CNV data. 
+
+
+
+## Step 6 - Overlay with spatial visualisations 
+Import inferCNV .csv file to Loupe Browser and visualise on spatial map.
+
+Conducted using the Loupe browser by importing the inferCNV .csv file with two columns (Barcode and Clonal_annotation) and visualising this onto the spatial map. This overlay can also be achieved using Seurat or ggplot2 (using the annotation_raster function).
+
+
+
 
 
 ### Clusters spots based method
-for 10x FFPE V2 slides, 11mm has around 14k spots,(It is a time-consuming job for pathologies to annotate all spots for benign, cancer stages, stroma, etc).and in this test, normally, it requires many sections, like several from prostate local cancer. several lymph nodes sections. it is even harder for most of lab. if you don't have such requirement, you can run analysis based on cluster and gene expression.
+For 10x FFPE V2 slides, 11mm has around 14k spots,(It is a time-consuming job for pathologies to annotate all spots for benign, cancer stages, stroma, etc).and in this test, normally, it requires many sections, like several from prostate local cancer. several lymph nodes sections.
+it is even harder for most of lab. if you don't have such requirement, you can run analysis based on cluster and gene expression. !!!!!! NEEDS WORK !!!!!
+
 
 
 
@@ -109,327 +100,313 @@ if you have pathlogist to annotate all spots for each section. we recommended to
 based on this pathologist annotation, it has more accurate spots and less number of spots to reduce the computation power.
 
 
-# 10X ST HD slides copy number variation methods
+# 10X Visium HD ST analysis
 
-10x FFPE V2 HD is the high resolution HD, it contains more than 42 million 2um square. the barcode naming system has changed and also the size of the expression matrix is around 92G high, so I recommend to use a workstation has at least 200G memory to handle the data.
-
-because of the reading is relatively low in each 2um square now. I removed the criteria UMI count >500. 
-
-
-I use 8um H5 expression matrix(contain loupe browser file) as input file. based on this, we can change to magnitude of 8um, like 16um 24um etc. I also created a function change the size of bin.
+The improved 10x FFPE V2 HD contains more than 42 million barcodes in 2um squares. The barcode naming system has changed and also the size of the expression matrix, which often reaches a file size of 92GB - therefore a platform with around 200GB RAM is required. 
 
 # Script
 
 ``` r
 # load the required packages
-install.packages("remotes")
-remotes::install_github("yintz/SPACEmapX")
-library(devtools)
-library(ape)
-library(phylogram)
+library(infercnv)
 library(tidyverse)
-library(preprocessCore)
-library(Seurat)
-library(ggplot2)
-library(patchwork)
 library(dplyr)
-library(remotes)
-library(devtools)
-library(ape)
-library(phylogram)
-library(tidyverse)
-library(hdf5r)
-library(Cairo)
-devtools::install_github("broadinstitute/infercnv@RELEASE_3_16")
+library(Seurat)
+library(tibble)
+library(SPACEmapX)
 
+working_directory="<working_directory>"
+setwd(working_directory)
 ```
 
-``` r
-# set working directory
-setwd("./Pt15")
+Step 1 - Input section data
 
-``` 
-Reads the expression matrix into R
-if you have CSV file created as above.
+Read the expression matrix into R using the automated SpatialDataTable.csv method and then merge the histology and count matrices.
 
 ```r
 
 # load source data to analysis (example below from wiki)
-infotable<-loadSTinfo("/data/SpatialDataTable.csv")
+SpatialDataTable <- SPACEmapX::loadSTinfo("SpatialDataTable.csv")
 
 # load all expression matrix and barcode lists
-loadSTdata(infotable)
+SPACEmapX::loadSTdata(SpatialDataTable)
 
 
+## Save histology and counts for each section to run initial analysis (ref=NULL) in order to pick reference barcodes
+## We suggest that appropriate filtering is conducted to make cell types of interest equally represented in the dataset as no_ref inferCNV analysis relies on normalisation against dataset averages for specific gene expression (i.e. susceptible to being skewed by over-/under-representation)
+counts_A2 <- SpatialInferCNV::MergingCountAndAnnotationData("A2", A2_histology, count_matrix_A2) # filter counts for barcodes shared with histology
+annotations_A2 <- SpatialInferCNV::FinalAnnotations(A2_histology, count_matrix_A2) # filter annotations for barcodes shared with count matriix
+write.table(counts_A2, "counts_A2.tsv", sep = "\t")
+write.table(annotations_A2, "annotations_A2.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
+counts_P4 <- SpatialInferCNV::MergingCountAndAnnotationData("P4", P4_histology, count_matrix_P4)
+annotations_P4 <- SpatialInferCNV::FinalAnnotations(P4_histology, count_matrix_P4)
+write.table(counts_P4, "counts_P4.tsv", sep = "\t")
+write.table(annotations_P4, "annotations_P4.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
+counts_LII1 <- SpatialInferCNV::MergingCountAndAnnotationData("LII1", LII1_histology, count_matrix_LII1)
+annotations_LII1 <- SpatialInferCNV::FinalAnnotations(LII1_histology, count_matrix_LII1)
+write.table(counts_LII1, "counts_LII1.tsv", sep = "\t")
+write.table(annotations_LII1, "annotations_LII1.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
 
-histologylist<-rbind(A2_histology,P4_histology,LII1_histology)
-histology_df <- as.data.frame(table(histologylist$Histology))
-colnames(histology_df) <- c("Histology_Type", "Count")
-print(histology_df)
-
-keep_types <- c("Benign","Cancer","Cancer 3+4")
-histologylist <- histologylist[histologylist$Histology %in% keep_types, ]
-
-
-A2_Joined_Counts <- MergingCountAndAnnotationData("A2",A2_Histology, A2_ENSBMLID_Counts)
-P4_Joined_Counts <- MergingCountAndAnnotationData("P4",P4_Histology, P4_ENSBMLID_Counts)
-LII1_Joined_Counts <- MergingCountAndAnnotationData("LII1",LII1_Histology, LII1_ENSBMLID_Counts)
-
-Counts_joined <- A1_Joined_Counts %>% replace(., is.na(.), 0)
-Counts_joined <- Counts_joined %>% column_to_rownames(., var = "Genes")
-write.table(Counts_joined, "countMatrix.tsv", sep = "\t")
-MergeAllAnnotation<-A1_Joined_Counts
-MergedAll_Final <- FinalAnnotations(MergeAllAnnotation, Counts_joined)
-write.table(MergedAll_Final, "Annotations.tsv", 
-            sep = "\t",
-            quote = FALSE, 
-            col.names = FALSE, 
-            row.names = FALSE)
-
-Ref_SpaceMapX <- SpaceMapX::CreateSpaceMapXObject(raw_counts_matrix="countMatrix.tsv", 
-                                             gene_order_file="./siCNV_GeneOrderFile.tsv",
-                                             annotations_file="./Annotations.tsv",
-                                             delim="\t",
-                                             ref_group_names= NULL,
-                                             chr_exclude = c("ChrM"))
-
-Ref_SpaceMapXNoGroup = SpaceMapX::run(Ref_SpaceMapX,
-                                  cutoff=0.1,
-                                  out_dir="./CloneA1", 
-                                  num_threads = 10,
-                                  denoise=T,
-                                  output_format = "png",
-                                  hclust_method='ward.D2',
-                                  cluster_by_groups=F,
-                                  analysis_mode = "samples",
-                                  tumor_subcluster_partition_method = "qnorm",
-                                  HMM=F)
-
-
-clustering <- read.dendrogram(file="./CloneA1/infercnv.preliminary.observations_dendrogram.txt")
-clustering_phylo <- as.phylo(clustering)
-my.subtrees = subtrees(clustering_phylo)  # subtrees() to subset
-png("clustering_phylo.png",width=10000,height=10500, res = 300)
-plot(clustering_phylo,show.tip.label = FALSE)
-nodelabels(text=1:clustering_phylo$Nnode,node=1:clustering_phylo$Nnode+Ntip(clustering_phylo))
-dev.off()
-
-
-for example the quiet twig is 539
 ```
-ShowTwigSpotsList(539)
+
+Step 2a - Section-specific reference set selection
+
+Run inferCNV with no reference to select the 'quiet twig' from this section
+
+siCNV_GeneOrderFile.tsv chromosome order reference file available at "raw.githubusercontent.com/aerickso/SpatialInferCNV/main/FigureScripts/siCNV_GeneOrderFile.tsv"
+
 ```r
-this function will generate a csv file with spots barcode.
+
+# Running inferCNV with no reference for each section, initially section A2
+
+inferCNV_object <- infercnv::CreateInfercnvObject(
+                                raw_counts_matrix = "counts_A2.tsv",
+                                annotations = "annotations_A2.tsv",
+                                gene_order_file = "siCNV_GeneOrderFile.tsv", ## Reference file - link available above
+                                delim = "\t",
+                                ref_group_names = NULL, ## No reference used on this run
+                                chr_exclude = c("chrM")) ## Exclude M genes
+
+inferCNV_object = infercnv::run(inferCNV_object,
+                                cutoff=0.1, ## 0.1 for 10X Genomics data
+                                out_dir="<out_dir>/A2_RefSelection", 
+                                num_threads = 2, ## Number of computinng threads to be used
+                                plot_chr_scale=TRUE, ## Scale size of chromosomes based on actual size
+                                write_phylo = TRUE, ## Write phylogenetic tree as a file
+                                window_length = 101, ## Smoothing window size od 101 genes (50 genes either side of query gene)
+                                hclust_method='ward.D2',
+                                denoise=TRUE,
+                                cluster_by_groups=FALSE, 
+                                analysis_mode = "samples",
+                                tumor_subcluster_partition_method = "qnorm",
+                                HMM=FALSE,
+                                output_format = "png")
 
 
-
-Counts_joined <- P4_Joined_Counts %>% replace(., is.na(.), 0)
-Counts_joined <- Counts_joined %>% column_to_rownames(., var = "Genes")
-write.table(Counts_joined, "countMatrix.tsv", sep = "\t")
-MergeAllAnnotation<-P4_Joined_Counts
-MergedAll_Final <- FinalAnnotations(MergeAllAnnotation, Counts_joined)
-write.table(MergedAll_Final, "Annotations.tsv", 
-            sep = "\t",
-            quote = FALSE, 
-            col.names = FALSE, 
-            row.names = FALSE)
-
-Ref_SpaceMapX <- SpaceMapX::CreateSpaceMapXObject(raw_counts_matrix="countMatrix.tsv", 
-                                             gene_order_file="./siCNV_GeneOrderFile.tsv",
-                                             annotations_file="./Annotations.tsv",
-                                             delim="\t",
-                                             ref_group_names= NULL,
-                                             chr_exclude = c("ChrM"))
-
-Ref_SpaceMapXNoGroup = SpaceMapX::run(Ref_SpaceMapX,
-                                  cutoff=0.1,
-                                  out_dir="./CloneP4", 
-                                  num_threads = 10,
-                                  denoise=T,
-                                  output_format = "png",
-                                  hclust_method='ward.D2',
-                                  cluster_by_groups=F,
-                                  analysis_mode = "samples",
-                                  tumor_subcluster_partition_method = "qnorm",
-                                  HMM=F)
-
-
-clustering <- read.dendrogram(file="./CloneP4/infercnv.preliminary.observations_dendrogram.txt")
+# Assessing phylogenetic dendogram and selecting barcodes from twigs of interest to select section-specific reference
+clustering <- read.dendrogram(file="infercnv.preliminary.observations_dendrogram.txt")
 clustering_phylo <- as.phylo(clustering)
 my.subtrees = subtrees(clustering_phylo)  # subtrees() to subset
+
 png("clustering_phylo.png",width=10000,height=10500, res = 300)
 plot(clustering_phylo,show.tip.label = FALSE)
 nodelabels(text=1:clustering_phylo$Nnode,node=1:clustering_phylo$Nnode+Ntip(clustering_phylo))
 dev.off()
 
-for example the quiet twig is 324
+# Select quiet twig, e.g. 321 and generate a .csv file of the barcodes present in that twig
+ShowTwigSpotsList(321)
+
 ```
-ShowTwigSpotsList(324)
+Repeat step 2 for each of the sections which results in list of barcodes representing the quiet barcodes across the patient
+
+
+Step 2b - Patient-specific reference set selection
+
+Run inferCNV with no reference to select the 'quietest of the quiet twig' from this section
+
+Combine the data from the quiet twigs of each section and reanalyse with inferCNV without a reference to find the patient-wide quietest twig.
+
+This is shown for the 3 slices (A2, P4, LII1) after Step 2a has been conducted for each slice to pick the quiet twig and import the *_Ref.csv generated by ShowTwigSpotsList()
+
 ```r
-this function will generate a csv file with spots barcode.
 
-Now we have two quiet Ref. we need to merge them together to make the quietest ref as final ref.
+# Import A2_Ref and P4_Ref .csv files containing lists of quiet barcodes as generated above.
+A2_Ref <- read.csv(A2_Ref.csv)
+P4_Ref <- read.csv(P4_Ref.csv)
+LII1_Ref <- read.csv(lII1_Ref.csv)
+
+# Filter count matrices for selected barcodes
+A2_ref_filtered <- MergingCountAndAnnotationData("A2", A2_Ref, count_matrix_A2)
+P4_ref_filtered <- MergingCountAndAnnotationData("P4", P4_Ref, count_matrix_P4)
+LII1_ref_filtered <- MergingCountAndAnnotationData("LII1", LII1_Ref, count_matrix_LII1)
+
+# Merge histology and count data and save for use in inferCNV
+ref_counts_joined <- merge(A2_ref_filtered, P4_ref_filtered, by="Genes") !!!!! check
+ref_counts_joined <- merge(ref_counts_joined, LII1_ref_filtered, by="Genes") !!!!! check
+ref_counts_joined <- ref_counts_joined %>% column_to_rownames(., var = "Genes")
+write.table(ref_counts_joined, "ref_counts_joined.tsv", sep = "\t")
+ref_histology_joined <- rbind(A2_Ref, P4_Ref, LII1_Ref)
+ref_histology_joined <- FinalAnnotations(ref_histology_joined, ref_counts_joined)
+write.table(ref_histology_joined, "ref_histology_joined.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
+
+inferCNV_object <- infercnv::CreateInfercnvObject(
+                                raw_counts_matrix="ref_counts_joined.tsv", 
+                                annotations_file="ref_histology_joined.tsv",
+                                gene_order_file="siCNV_GeneOrderFile.tsv",
+                                delim="\t",
+                                ref_group_names= NULL,
+                                chr_exclude = c("ChrM"))
+
+inferCNV_object = infercnv::run(inferCNV_object,
+                                cutoff=0.1, ## 0.1 for 10X Genomics data
+                                out_dir="<out_dir>/Patient_RefSelection", 
+                                num_threads = 2, ## Number of computinng threads to be used
+                                plot_chr_scale=TRUE, ## Scale size of chromosomes based on actual size
+                                write_phylo = TRUE, ## Write phylogenetic tree as a file
+                                window_length = 101, ## Smoothing window size od 101 genes (50 genes either side of query gene)
+                                hclust_method='ward.D2',
+                                denoise=TRUE,
+                                cluster_by_groups=FALSE, 
+                                analysis_mode = "samples",
+                                tumor_subcluster_partition_method = "qnorm",
+                                HMM=FALSE,
+                                output_format = "png")
 
 
-load A2_Ref and P4_Ref csv files into Rstudo.
-
-A2_Joined_Counts <- MergingCountAndAnnotationData("A2",A2_Ref, A2_ENSBMLID_Counts)
-P4_Joined_Counts <- MergingCountAndAnnotationData("P4",P4_Ref, P4_ENSBMLID_Counts)
-
-Counts_joined <- A2_Joined_Counts %>% P4_Joined_Counts
-Counts_joined <- Counts_joined %>% replace(., is.na(.), 0)
-Counts_joined <- Counts_joined %>% column_to_rownames(., var = "Genes")
-write.table(Counts_joined, "countMatrix.tsv", sep = "\t")
-MergeAllAnnotation<-rbind(A2_Ref,P4_Ref)
-MergedAll_Final <- FinalAnnotations(MergeAllAnnotation, Counts_joined)
-write.table(MergedAll_Final, "Annotations.tsv", 
-            sep = "\t",
-            quote = FALSE, 
-            col.names = FALSE, 
-            row.names = FALSE)
-
-Ref_SpaceMapX <- SpaceMapX::CreateSpaceMapXObject(raw_counts_matrix="countMatrix.tsv", 
-                                             gene_order_file="./siCNV_GeneOrderFile.tsv",
-                                             annotations_file="./Annotations.tsv",
-                                             delim="\t",
-                                             ref_group_names= NULL,
-                                             chr_exclude = c("ChrM"))
-
-Ref_SpaceMapXNoGroup = SpaceMapX::run(Ref_SpaceMapX,
-                                  cutoff=0.1,
-                                  out_dir="./CloneRef", 
-                                  num_threads = 10,
-                                  denoise=T,
-                                  output_format = "png",
-                                  hclust_method='ward.D2',
-                                  cluster_by_groups=F,
-                                  analysis_mode = "samples",
-                                  tumor_subcluster_partition_method = "qnorm",
-                                  HMM=F)
-
-
-clustering <- read.dendrogram(file="./CloneRef/infercnv.preliminary.observations_dendrogram.txt")
+# Once again select the quietest twig to pick the patient-specific reference barcodes representing the quietest of the quiet 
+# Assess phylogenetic dendogram and select barcodes from twigs of interest
+clustering <- read.dendrogram(file="infercnv.preliminary.observations_dendrogram.txt")
 clustering_phylo <- as.phylo(clustering)
 my.subtrees = subtrees(clustering_phylo)  # subtrees() to subset
+
 png("clustering_phylo.png",width=10000,height=10500, res = 300)
 plot(clustering_phylo,show.tip.label = FALSE)
 nodelabels(text=1:clustering_phylo$Nnode,node=1:clustering_phylo$Nnode+Ntip(clustering_phylo))
 dev.off()
 
-for example the quiet twig is 5543
+# Select quiet of the quietest twig, e.g. 123 and generate a ref.csv file of the barcodes present in that twig for use as patient-specific reference
+ShowTwigSpotsList(123)
 ```
-ShowTwigSpotsList(5543)
+
+Reference is now selected. Analysis can now continue with intitally each section and then patient-wide. Below analysis is shown on a global patient-wide scale as the pipeline is the same. 
+
+Step 4 - Global clone selection
+
 ```r
-this function will generate a csv file with spots barcode, save this csv file / files  and load it back to Rstudio
 
-# This is how the Reference created.
+# Initially inferCNV is re-run, now using the chosen reference
+ref <- read.csv(ref.csv)
 
+# Generate patient-wide counts and histology matrices
+histology_annotations <- rbind(A2_histology, P4_histology, LII1_histology))
 
-load Ref csv files into Rstudo. for example, the reference is only on A2 as A2Ref.csv
+## Select for cell types of interest
+keep_types <- c("Benign","Cancer","Cancer 3+4") # Needs editing based on desired cell types for analysis
+histology_annotations <- histology_annotations[histology_annotations$Histology %in% keep_types, ]
 
-A2_Be_ENSBMLID_Counts <- ImportCountData("Be_A2", "./A2/filtered_feature_bc_matrix.h5")
-Be_A2_Histology <- ImportHistologicalAnnotations("Be_A2","/A2Ref.csv")
-Be_A2_Histology$Histology<-c("Pt15Ref")
-benign_A2_Joined_Counts <- MergingCountAndAnnotationData("Be_A2",Be_A2_Histology, A2_Be_ENSBMLID_Counts )
-selected_benign <- FinalAnnotations(Be_A2_Histology, benign_A2_Joined_Counts)
+## Generate combnined count matrix
+count_matrix <- merge(count_matrix_A2, count_matrix_P4, by = "genes")
+count_matrix <- merge(count_matrix, count_matrix_LII1, by = "genes")
+rownames(count_matrix) <- count_matrix$genes
+count_matrix <- count_matrix[,-1]
+count_matrix <- as.data.frame(count_matrix)
+dim(count_matrix)
 
-A2_Joined_Counts <- MergingCountAndAnnotationData("A2",A2_histology, A2_ENSBMLID_Counts)
-P4_Joined_Counts <- MergingCountAndAnnotationData("P4",P4_histology, P4_ENSBMLID_Counts)
-LII1_Joined_Counts <- MergingCountAndAnnotationData("LII1",LII1_histology, LII1_ENSBMLID_Counts)
+## Save combined counts for final analyses 
+final_counts <- SpatialInferCNV::MergingCountAndAnnotationData(sample_name, histology_annotations, count_matrix)
+write.table(final_counts, "final_counts.tsv", sep = "\t")
 
-AllEpitheliumEnriched <- rbind(A2_Histology,P4_Histology,LII1_Histology)
-             
-Counts_joined <- A2_Joined_Counts %>% P4_Joined_Counts
-Counts_joined <- Counts_joined %>% LII1_Joined_Counts
-Counts_joined <- Counts_joined %>% benign_A2_Joined_Counts
-Counts_joined <- Counts_joined %>% replace(., is.na(.), 0)
-Counts_joined <- Counts_joined %>% column_to_rownames(., var = "Genes")
-write.table(Counts_joined, "countMatrix.tsv", sep = "\t")
-MergeAllAnnotation<-rbind(AllEpitheliumEnriche,selected_benign)
-MergedAll_Final <- FinalAnnotations(MergeAllAnnotation, Counts_joined)
-write.table(MergedAll_Final, "Annotations.tsv", 
-            sep = "\t",
-            quote = FALSE, 
-            col.names = FALSE, 
-            row.names = FALSE)
-
-this time, change the ref_group_names to the name of the Ref "Pt15Ref"
-Ref_SpaceMapX <- SpaceMapX::CreateSpaceMapXObject(raw_counts_matrix="countMatrix.tsv", 
-                                             gene_order_file="./siCNV_GeneOrderFile.tsv",
-                                             annotations_file="./Annotations.tsv",
-                                             delim="\t",
-                                             ref_group_names= c("Pt15Ref"),
-                                             chr_exclude = c("ChrM"))
+## Set reference barcodes in the combined patient histology and save for final analyses 
+annotations_final <- SpatialInferCNV::FinalAnnotations(histology_annotations, count_matrix)
+annotations_final[(annotations_final$Barcode %in% ref$Barcode),"Histology"] <- "reference"
+write.table(annotations_final, "annotations_final.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
 
 
-Ref_SpaceMapXNoGroup = SpaceMapX::run(Ref_SpaceMapX,
-                                  cutoff=0.1,
-                                  out_dir="./CloneFinalUnGroup", 
-                                  num_threads = 10,
-                                  denoise=T,
-                                  output_format = "png",
-                                  hclust_method='ward.D2',
-                                  cluster_by_groups=F,
-                                  analysis_mode = "samples",
-                                  tumor_subcluster_partition_method = "qnorm",
-                                  HMM=F)
+# Now ref_group_names is set to "reference"
+inferCNV_object <- infercnv::CreateInfercnvObject(
+                                raw_counts_matrix="final_counts.tsv", 
+                                gene_order_file="siCNV_GeneOrderFile.tsv",
+                                annotations_file="annotations_final.tsv",
+                                delim="\t",
+                                ref_group_names= "reference", # set reference 
+                                chr_exclude = c("ChrM"))
 
 
-clustering <- read.dendrogram(file="./CloneFinalUnGroup/infercnv.preliminary.observations_dendrogram.txt")
+inferCNV_object = infercnv::run(inferCNV_object,
+                                cutoff=0.1, ## 0.1 for 10X Genomics data
+                                out_dir="<out_dir>/final_analyses", 
+                                num_threads = 2, ## Number of computinng threads to be used
+                                plot_chr_scale=TRUE, ## Scale size of chromosomes based on actual size
+                                write_phylo = TRUE, ## Write phylogenetic tree as a file
+                                window_length = 101, ## Smoothing window size od 101 genes (50 genes either side of query gene)
+                                hclust_method='ward.D2',
+                                denoise=TRUE,
+                                cluster_by_groups=FALSE, 
+                                analysis_mode = "samples",
+                                tumor_subcluster_partition_method = "qnorm",
+                                HMM=FALSE,
+                                output_format = "png")
+
+
+# Generate dendogram of clones and manually select barcodes in each clone for downstream analysis
+clustering <- read.dendrogram(file="infercnv.preliminary.observations_dendrogram.txt")
 clustering_phylo <- as.phylo(clustering)
 my.subtrees = subtrees(clustering_phylo)  # subtrees() to subset
+
 png("clustering_phylo.png",width=10000,height=10500, res = 300)
 plot(clustering_phylo,show.tip.label = FALSE)
 nodelabels(text=1:clustering_phylo$Nnode,node=1:clustering_phylo$Nnode+Ntip(clustering_phylo))
 dev.off()
 
-
-separate twigs using CNV pattern. for example, it can be separated as 112, 444, 677. 3 twigs in total.
-```
+# E.g. select the three twigs belonging to Clone C
 ShowTwigSpotsList(112, 444, 677)
-```r
-this function will generate a csv file with spots barcode, save this csv file as Ref.csv and load it back to Rstudio
-
-set each csv file a clone name like clone0 for same as Ref, cloneA, cloneB, for more and more CNV patten changes, CloneX is the clone shown on both lymph nodes and also tissue. if there are more Clone on both tissues. name it as CloneX1, CloneX2, CloneX3.
-load it back to Rstudio.
-
-
-```r
-AllEpitheliumEnriched <- rbind(cloneA,CloneB,CloneX)
-MergeAllAnnotation<-rbind(AllEpitheliumEnriche,selected_benign)
-
-MergedAll_Final <- FinalAnnotations(MergeAllAnnotation, Counts_joined)
-write.table(MergedAll_Final, "Annotations.tsv", 
-            sep = "\t",
-            quote = FALSE, 
-            col.names = FALSE, 
-            row.names = FALSE)
-
-#change the ref_group_names to the name of the Ref "Pt15Ref"
-Ref_SpaceMapX <- SpaceMapX::CreateSpaceMapXObject(raw_counts_matrix="countMatrix.tsv", 
-                                             gene_order_file="./siCNV_GeneOrderFile.tsv",
-                                             annotations_file="./Annotations.tsv",
-                                             delim="\t",
-                                             ref_group_names= c("Pt15Ref"),
-                                             chr_exclude = c("ChrM"))
-
-# change the cluster_by_groups=T 
-Ref_SpaceMapXGroup = SpaceMapX::run(Ref_SpaceMapX,
-                                  cutoff=0.1,
-                                  out_dir="./CloneFinalGroup", 
-                                  num_threads = 10,
-                                  denoise=T,
-                                  output_format = "png",
-                                  hclust_method='ward.D2',
-                                  cluster_by_groups=T,
-                                  analysis_mode = "samples",
-                                  tumor_subcluster_partition_method = "qnorm",
-                                  HMM=F)
 
 ```
-# this is the final SPACEmapX results.
 
-## Results Demo
+Now conduct the manual selection of Clones from the CNV data in the inferCNV heatmap. Saving these using ShowTwigSpotsList() and naming these to what Clone they are. Clone X is used to designate clones that are metastatic.
+
+Once done, inferCNV is run a final time to produce the final heatmap whereby the barcodes are ordered based on Clones and each clone is annotated with a coloured bar on the Y-axis. For this, cluster_by_groups is changed to =TRUE
+
+
+```r
+selected_clones <- c(cloneA, CloneB, CloneC, CloneD, CloneE, CloneF, CloneG, CloneH, CloneX) !!check
+annotations_clonal <- histology_annotations[histology_annotations$Barcode %in% selected_clones$Barcode,]
+
+annotations_clonal <- SpatialInferCNV::FinalAnnotations(annotations_clonal, count_matrix)
+annotations_clonal[(annotations_clonal$Barcode %in% ref$Barcode),"Histology"] <- "reference"
+write.table(annotations_clonal, "annotations_clonal.tsv", 
+            sep = "\t", quote = FALSE, 
+            col.names = FALSE, row.names = FALSE)
+
+counts_clonal <- SpatialInferCNV::MergingCountAndAnnotationData("clonal", annotations_clonal, count_matrix)
+write.table(final_counts, "counts_clonal.tsv", sep = "\t")
+
+inferCNV_object <- infercnv::CreateInfercnvObject(
+                                raw_counts_matrix="counts_clonal.tsv", 
+                                gene_order_file="siCNV_GeneOrderFile.tsv",
+                                annotations_file="annotations_clonal.tsv",
+                                delim="\t",
+                                ref_group_names= "reference", # set reference 
+                                chr_exclude = c("ChrM"))
+
+# Change cluster_by_groups to =TRUE, which will now reorder the heatmap to group clones on Y-axis and enable better visualisation
+inferCNV_object = infercnv::run(inferCNV_object,
+                                cutoff=0.1, ## 0.1 for 10X Genomics data
+                                out_dir="<out_dir>/clonal_analyses", 
+                                num_threads = 2, ## Number of computing threads to be used
+                                plot_chr_scale=TRUE, ## Scale size of chromosomes based on actual size
+                                write_phylo = TRUE, ## Write phylogenetic tree as a file
+                                window_length = 101, ## Smoothing window size od 101 genes (50 genes either side of query gene)
+                                hclust_method='ward.D2',
+                                denoise=TRUE,
+                                cluster_by_groups=TRUE, 
+                                analysis_mode = "samples",
+                                tumor_subcluster_partition_method = "qnorm",
+                                HMM=FALSE,
+                                output_format = "png")
+
+# Assess inferCNV outputs
+
+```
+
+Step 5 (to generate phylogenetic tree) can now be completed by manual assessment of how each of the clones is related to one another by interpreting the CNV data. 
+
+Step 6 (to overlay with spatial visualisations) can now be conducted using the Loupe browser by importing a .csv file with two columns (Barcode and Clonal_annotation) and visualising. This can also be achieved using Seurat.
+
+
+
+
+# Example of a final heatmap with different clones annotated
 ![image](https://github.com/yintz/SPACEmapX/blob/main/Figures/P15.preliminary.png)
 
 # Citation
