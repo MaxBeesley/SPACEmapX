@@ -56,7 +56,7 @@ Install the JAGS package. This can be installed for Mac, Windows, or Linux. Be s
 The package can be installed through GitHub using;
 ``` r
 install.packages("remotes")
-remotes::install_github("yintz/SPACEmapX")
+remotes::install_github("MaxBeesley/SPACEmapX")
 ```
 
 
